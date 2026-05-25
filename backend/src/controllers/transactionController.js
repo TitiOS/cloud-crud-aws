@@ -67,9 +67,56 @@ const deleteTransaction = async (req, res) => {
     });
   }
 };
+const updateTransaction = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const {
+      title,
+      amount,
+      type,
+      category,
+      description,
+      transaction_date,
+    } = req.body;
+
+    const result = await pool.query(
+      `
+      UPDATE transactions
+      SET
+        title = $1,
+        amount = $2,
+        type = $3,
+        category = $4,
+        description = $5,
+        transaction_date = $6
+      WHERE id = $7
+      RETURNING *
+      `,
+      [
+        title,
+        amount,
+        type,
+        category,
+        description,
+        transaction_date,
+        id,
+      ]
+    );
+
+    res.json(result.rows[0]);
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      error: "Failed to update transaction",
+    });
+  }
+};
 
 module.exports = {
   getTransactions,
   createTransaction,
   deleteTransaction,
+  updateTransaction,
 };
