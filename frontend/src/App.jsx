@@ -1,38 +1,117 @@
+import { useEffect, useState } from "react";
+import axios from "axios";
+
 export default function MoneyManager() {
-  const transactions = [
-    {
-      id: 1,
-      title: "Salário",
-      amount: 5000,
-      type: "income",
-      category: "Salary",
-      date: "2026-05-20",
-    },
-    {
-      id: 2,
-      title: "Mercado",
-      amount: 250,
-      type: "expense",
-      category: "Food",
-      date: "2026-05-21",
-    },
-    {
-      id: 3,
-      title: "Internet",
-      amount: 120,
-      type: "expense",
-      category: "Bills",
-      date: "2026-05-22",
-    },
-  ];
+
+  const [transactions, setTransactions] = useState([]);
+
+
+  const [formData, setFormData] = useState({
+  title: "",
+  amount: "",
+  type: "",
+  category: "",
+  description: "",
+  transaction_date: "",
+  });
+
+  const [editingId, setEditingId] = useState(null);
+
+  const fetchTransactions = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:3000/transactions"
+        );
+
+        setTransactions(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+
+      if (editingId) {
+
+        await axios.put(
+          `http://localhost:3000/transactions/${editingId}`,
+          formData
+        );
+
+        setEditingId(null);
+
+      } else {
+
+        await axios.post(
+          "http://localhost:3000/transactions",
+          formData
+        );
+      }
+
+      await fetchTransactions();
+
+      setFormData({
+        title: "",
+        amount: "",
+        type: "",
+        category: "",
+        description: "",
+        transaction_date: "",
+      });
+
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(
+        `http://localhost:3000/transactions/${id}`
+      );
+
+      await fetchTransactions();
+
+    } catch (error) {
+      console.error(error);
+    }
+    };
+
+    const handleEdit = (transaction) => {
+    setEditingId(transaction.id);
+
+    setFormData({
+      title: transaction.title,
+      amount: transaction.amount,
+      type: transaction.type,
+      category: transaction.category,
+      description: transaction.description || "",
+      transaction_date: transaction.transaction_date.split("T")[0],
+    });
+  };
+
+  useEffect(() => {
+    fetchTransactions();
+  }, []);
+
 
   const totalIncome = transactions
     .filter((t) => t.type === "income")
-    .reduce((acc, t) => acc + t.amount, 0);
+    .reduce((acc, t) => acc + Number(t.amount), 0);
 
   const totalExpense = transactions
     .filter((t) => t.type === "expense")
-    .reduce((acc, t) => acc + t.amount, 0);
+    .reduce((acc, t) => acc + Number(t.amount), 0);
 
   const balance = totalIncome - totalExpense;
 
@@ -78,38 +157,58 @@ export default function MoneyManager() {
             Nova Transação
           </h2>
 
-          <form className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <form className="grid grid-cols-1 md:grid-cols-2 gap-4" onSubmit={handleSubmit}>
             <input
               type="text"
+              name="title"
+              value={formData.title}
+              onChange={handleChange}
               placeholder="Título"
               className="border border-gray-300 rounded-xl p-3"
             />
 
             <input
               type="number"
+              name="amount"
+              value={formData.amount}
+              onChange={handleChange}
               placeholder="Valor"
               className="border border-gray-300 rounded-xl p-3"
             />
 
-            <select className="border border-gray-300 rounded-xl p-3">
-              <option>Selecione o tipo</option>
-              <option>income</option>
-              <option>expense</option>
+            <select
+              name="type"
+              value={formData.type}
+              onChange={handleChange}
+              className="border border-gray-300 rounded-xl p-3"
+            >
+              <option value="">Selecione o tipo</option>
+              <option value="income">income</option>
+              <option value="expense">expense</option>
             </select>
 
             <input
               type="text"
+              name="category"
+              value={formData.category}
+              onChange={handleChange}
               placeholder="Categoria"
               className="border border-gray-300 rounded-xl p-3"
             />
 
             <input
               type="date"
+              name="transaction_date"
+              value={formData.transaction_date}
+              onChange={handleChange}
               className="border border-gray-300 rounded-xl p-3"
             />
 
             <input
               type="text"
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
               placeholder="Descrição"
               className="border border-gray-300 rounded-xl p-3"
             />
@@ -118,7 +217,7 @@ export default function MoneyManager() {
               type="submit"
               className="bg-blue-600 text-white rounded-xl p-3 hover:bg-blue-700 transition col-span-1 md:col-span-2"
             >
-              Adicionar Transação
+              {editingId ? "Atualizar Transação" : "Adicionar Transação"}
             </button>
           </form>
         </div>
@@ -172,15 +271,23 @@ export default function MoneyManager() {
                         : "text-red-600"
                     }`}
                   >
-                    R$ {transaction.amount.toFixed(2)}
+                    R$ {Number(transaction.amount).toFixed(2)}
                   </td>
-                  <td className="p-4">{transaction.date}</td>
+                  <td className="p-4">{new Date(transaction.transaction_date).toLocaleDateString("pt-BR")}</td>
                   <td className="p-4 flex gap-2">
-                    <button className="bg-yellow-400 hover:bg-yellow-500 text-white px-4 py-2 rounded-lg transition">
+                    <button
+                      type="button"
+                      onClick={() => handleEdit(transaction)}
+                      className="bg-yellow-400 hover:bg-yellow-500 text-white px-4 py-2 rounded-lg transition"
+                    >
                       Editar
                     </button>
 
-                    <button className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition">
+                    <button
+                      type="button"
+                      onClick={() => handleDelete(transaction.id)}
+                      className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition"
+                    >
                       Excluir
                     </button>
                   </td>
