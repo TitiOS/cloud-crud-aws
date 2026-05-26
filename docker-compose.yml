@@ -1,0 +1,47 @@
+services:
+
+  postgres:
+    image: postgres:16
+    container_name: money-manager-db
+
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: money_manager
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backend/src/database/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  backend:
+    build: ./backend
+    container_name: money-manager-backend
+
+    ports:
+      - "3000:3000"
+
+    environment:
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: money_manager
+
+    depends_on:
+      - postgres
+
+  frontend:
+    build: ./frontend
+    container_name: money-manager-frontend
+
+    ports:
+      - "5173:5173"
+
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
