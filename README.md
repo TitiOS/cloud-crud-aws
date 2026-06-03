@@ -83,10 +83,7 @@ Serverless com AWS Lambda;
 Gerenciamento de APIs com API Gateway;
 Infraestrutura em nuvem AWS.
 
-## 7. Estrutura do Projeto
-<img width="219" height="524" alt="image" src="https://github.com/user-attachments/assets/e70a4965-a73a-49b6-b715-6467412f03ba" />
-
-## 8. Como Executar Localmente
+## 7. Como Executar Localmente
 
 # Pré-requisitos
 
@@ -108,7 +105,7 @@ cd cloud-crud-aws
 
 Crie um arquivo .env:
 
-DB_HOST=localhost
+DB_HOST=database-1.cu3a7zaelmoo.us-east-1.rds.amazonaws.com:
 
 DB_PORT=5432
 
@@ -116,7 +113,7 @@ DB_NAME=money_manager
 
 DB_USER=postgres
 
-DB_PASSWORD=postgres
+DB_PASSWORD=postgres123
 
 API_PORT=3000
 
