@@ -3,8 +3,11 @@
 ## Sistema de Gerenciamento Financeiro em Nuvem utilizando AWS
 
 Grupo
+
 10374691 - LUCAS GIOVANNETTI MOTTA HORN
+
 10437356 - ARTHUR EDUARDO DE ALMEIDA SANTOS
+
 10427342 - THIAGO DE OLIVEIRA SILVA
 
 ## 1. Visão Geral
@@ -50,30 +53,7 @@ IAM
 VPC
 Security Groups
 
-## 4. Estrutura do Projeto
-cloud-crud-aws/
-│
-├── frontend/
-│   ├── src/
-│   ├── public/
-│   └── Dockerfile
-│
-├── backend/
-│   ├── src/
-│   ├── routes/
-│   ├── models/
-│   └── Dockerfile
-│
-├── lambda/
-│   └── report/
-│
-├── docs/
-│   └── arquitetura.png
-│
-├── docker-compose.yml
-└── README.md
-
-## 5. Endpoints da API
+## 4. Endpoints da API
 Transações
 Método	Endpoint	Descrição
 GET	/transactions	Lista todas as transações
@@ -85,13 +65,13 @@ DELETE	/transactions/	Remove uma transação
 Relatórios
 GET /report/ Retorna estatísticas financeiras consolidadas.
 
-## 7. Segurança
+## 5. Segurança
 Banco de dados não exposto publicamente.
 Comunicação protegida por Security Groups.
 Controle de permissões utilizando IAM Roles.
 API Gateway atuando como ponto único de entrada.
 
-## 8. Resultados Obtidos
+## 6. Resultados Obtidos
 
 O projeto demonstra a integração entre múltiplos serviços AWS para construção de uma aplicação moderna baseada em microsserviços e computação em nuvem.
 
@@ -102,3 +82,55 @@ Banco gerenciado com RDS;
 Serverless com AWS Lambda;
 Gerenciamento de APIs com API Gateway;
 Infraestrutura em nuvem AWS.
+
+## 7. Estrutura do Projeto
+<img width="219" height="524" alt="image" src="https://github.com/user-attachments/assets/e70a4965-a73a-49b6-b715-6467412f03ba" />
+
+## 8. Como Executar Localmente
+
+# Pré-requisitos
+
+Docker
+
+Docker Compose
+
+Node.js 20+
+
+PostgreSQL
+
+# Clonando o Projeto
+
+git clone https://github.com/TitiOS/cloud-crud-aws.git
+
+cd cloud-crud-aws
+
+# Configurando Variáveis de Ambiente
+
+Crie um arquivo .env:
+
+DB_HOST=localhost
+
+DB_PORT=5432
+
+DB_NAME=money_manager
+
+DB_USER=postgres
+
+DB_PASSWORD=postgres
+
+API_PORT=3000
+
+# Executando
+
+docker compose up --build
+
+Aplicações disponíveis em:
+
+Frontend:
+http://localhost:5173
+
+Backend:
+http://localhost:3000
+
+
+
