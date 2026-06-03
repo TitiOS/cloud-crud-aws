@@ -20,7 +20,7 @@ export default function MoneyManager() {
   const fetchTransactions = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3000/transactions"
+          "http://money-lb-bcf217a5a0019ebf.elb.us-east-1.amazonaws.com/transactions"
         );
 
         setTransactions(response.data);
@@ -44,7 +44,7 @@ export default function MoneyManager() {
       if (editingId) {
 
         await axios.put(
-          `http://localhost:3000/transactions/${editingId}`,
+          `http://money-lb-bcf217a5a0019ebf.elb.us-east-1.amazonaws.com/transactions/${editingId}`,
           formData
         );
 
@@ -53,7 +53,7 @@ export default function MoneyManager() {
       } else {
 
         await axios.post(
-          "http://localhost:3000/transactions",
+          "http://money-lb-bcf217a5a0019ebf.elb.us-east-1.amazonaws.com/transactions",
           formData
         );
       }
@@ -77,7 +77,7 @@ export default function MoneyManager() {
   const handleDelete = async (id) => {
     try {
       await axios.delete(
-        `http://localhost:3000/transactions/${id}`
+        `http://money-lb-bcf217a5a0019ebf.elb.us-east-1.amazonaws.com/transactions/${id}`
       );
 
       await fetchTransactions();
