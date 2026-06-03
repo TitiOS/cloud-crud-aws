@@ -42,9 +42,11 @@ A Lambda consulta os dados da API e retorna estatísticas financeiras em formato
 
 # Docker compose:
 Back:
+
 <img width="700" height="327" alt="image" src="https://github.com/user-attachments/assets/cf4e0148-adf2-436b-90af-0a5ac6b84b28" />
 
 Front:
+
 <img width="518" height="190" alt="image" src="https://github.com/user-attachments/assets/4b3b3e7e-f655-4db5-962f-9bf92551c300" />
 
 
